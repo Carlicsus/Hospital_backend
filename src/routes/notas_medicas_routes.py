@@ -17,12 +17,12 @@ class NotasMedicasRoutes:
 
     def initialize_routes(self):
         """Registra los endpoints en el router."""
-        self.router.post("/", dependencies=[Depends(RoleRequired(["Médico Especialista","Médico General"]))], response_model=dict)(notasMedicasController.crear_nota)
-        self.router.get("/multiple", dependencies=[Depends(RoleRequired(["Médico Especialista","Médico General"]))], response_model=list)(notasMedicasController.agrupadas_por_diagnostico)
-        self.router.get("/{nota_id}", dependencies=[Depends(RoleRequired(["Médico Especialista","Médico General"]))], response_model=dict)(notasMedicasController.obtener_nota)
-        self.router.get("/", dependencies=[Depends(RoleRequired(["Médico Especialista","Médico General"]))], response_model=list)(notasMedicasController.obtener_todas)
-        self.router.put("/{nota_id}", dependencies=[Depends(RoleRequired(["Médico Especialista","Médico General"]))], response_model=dict)(notasMedicasController.actualizar_nota)
-        self.router.delete("/{nota_id}", dependencies=[Depends(RoleRequired(["Médico Especialista","Médico General"]))], response_model=dict)(notasMedicasController.eliminar_nota)
+        self.router.post("/", dependencies=[Depends(RoleRequired(["Administrador","Médico Especialista","Médico General"]))], response_model=dict)(notasMedicasController.crear_nota)
+        self.router.get("/multiple", dependencies=[Depends(RoleRequired(["Administrador","Médico Especialista","Médico General"]))], response_model=list)(notasMedicasController.agrupadas_por_diagnostico)
+        self.router.get("/{nota_id}", dependencies=[Depends(RoleRequired(["Administrador","Médico Especialista","Médico General"]))], response_model=dict)(notasMedicasController.obtener_nota)
+        self.router.get("/", dependencies=[Depends(RoleRequired(["Administrador","Médico Especialista","Médico General"]))], response_model=list)(notasMedicasController.obtener_todas)
+        self.router.put("/{nota_id}", dependencies=[Depends(RoleRequired(["Administrador","Médico Especialista","Médico General"]))], response_model=dict)(notasMedicasController.actualizar_nota)
+        self.router.delete("/{nota_id}", dependencies=[Depends(RoleRequired(["Administrador","Médico Especialista","Médico General"]))], response_model=dict)(notasMedicasController.eliminar_nota)
 
 # Se obtiene la única instancia de la clase y se usa en FastAPI
 notasMedicasRoutes = NotasMedicasRoutes().router
