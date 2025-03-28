@@ -25,7 +25,7 @@ class DatabaseMySQL:
         port = os.getenv("DB_PORT")
         db_name = os.getenv("DB_NAME")
 
-        self.engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}:{port}/{db_name}")
+        self.engine = create_engine(f"mysql+pymysql://avnadmin:AVNS_dDGC6nWxhiHESkdTWZ7@mysql-hospital-hospitalservicios.j.aivencloud.com:25606/Medikos2.0")
         self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
         self.Base = declarative_base()
 
