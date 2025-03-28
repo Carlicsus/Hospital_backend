@@ -18,11 +18,11 @@ class CitasRoutes:
 
     def initialize_routes(self):
         """Registra los endpoints en el router usando el controlador."""
-        self.router.post("/register", dependencies=[Depends(RoleRequired(["Médico Especialista","Médico General","Enfermero"]))], response_model=CitaMedicaResponse)(citas_controller.create_cita)
-        self.router.get("/getAll", dependencies=[Depends(RoleRequired(["Médico Especialista","Médico General","Enfermero"]))], response_model=list[CitaMedicaResponse])(citas_controller.read_citas)
-        self.router.get("/get/{cita_id}", dependencies=[Depends(RoleRequired(["Médico Especialista","Médico General","Enfermero"]))], response_model=CitaMedicaResponse)(citas_controller.read_cita)
-        self.router.get("/by_month/{medico_id}", dependencies=[Depends(RoleRequired(["Médico Especialista","Médico General","Enfermero"]))], response_model=list[CitaMedicaResponse])(citas_controller.get_citas_by_month)
-        self.router.put("/update/{cita_id}", dependencies=[Depends(RoleRequired(["Médico Especialista","Médico General","Enfermero"]))], response_model=CitaMedicaResponse)(citas_controller.update_cita)
+        self.router.post("/register", dependencies=[Depends(RoleRequired(["Administrador","Médico Especialista","Médico General","Enfermero"]))], response_model=CitaMedicaResponse)(citas_controller.create_cita)
+        self.router.get("/getAll", dependencies=[Depends(RoleRequired(["Administrador","Médico Especialista","Médico General","Enfermero"]))], response_model=list[CitaMedicaResponse])(citas_controller.read_citas)
+        self.router.get("/get/{cita_id}", dependencies=[Depends(RoleRequired(["Administrador","Médico Especialista","Médico General","Enfermero"]))], response_model=CitaMedicaResponse)(citas_controller.read_cita)
+        self.router.get("/by_month/{medico_id}", dependencies=[Depends(RoleRequired(["Administrador","Médico Especialista","Médico General","Enfermero"]))], response_model=list[CitaMedicaResponse])(citas_controller.get_citas_by_month)
+        self.router.put("/update/{cita_id}", dependencies=[Depends(RoleRequired(["Administrador","Médico Especialista","Médico General","Enfermero"]))], response_model=CitaMedicaResponse)(citas_controller.update_cita)
         self.router.delete("/delete/{cita_id}")(citas_controller.delete_cita)
 
 # Se obtiene la instancia única para ser usada en FastAPI
