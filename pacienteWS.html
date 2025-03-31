@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Paciente</title>
+</head>
+<body>
+  <h2>Paciente - Chat</h2>
+  <input type="text" id="token" placeholder="Tu token JWT"><br><br>
+  <button onclick="connect()">Conectar</button>
+  <hr>
+  <h3>Doctores Conectados:</h3>
+  <ul id="doctorsList"></ul>
+
+  <h3>Chat:</h3>
+  <input type="text" id="message" placeholder="Escribe un mensaje">
+  <button onclick="sendMessage()">Enviar</button>
+
+  <ul id="chatBox"></ul>
+
+  <script>
+    let ws;
+    let clientId = "";
+    let selectedDoctor = "";
+
+    async function connect() {
+      const token = document.getElementById("token").value;
+      ws = new WebSocket(`ws://localhost:8000/ws?token=${token}`);
+      ws.onopen = () => console.log("Conectado al WebSocket");
+
+      ws.onmessage = (event) => {
+        console.log("Mensaje del servidor: " + event.data);
+        const data = JSON.parse(event.data);
+        if (data.client_id) {
+          clientId = data.client_id;
+          obtenerDoctores();
+        } else if (data.from) {
+          const chatBox = document.getElementById("chatBox");
+          const li = document.createElement("li");
+          li.textContent = `Mensaje del Doctor: ${data.message}`;
+          chatBox.appendChild(li);
+        }
+      };
+
+      socket.onclose = function(event) {
+        console.log("Conexión cerrada");
+      };
+  
+      // Cuando ocurre un error en la conexión
+      socket.onerror = function(error) {
+        console.error("Error en WebSocket: ", error);
+      };
+    }
+
+    async function obtenerDoctores() {
+      const response = await fetch("http://localhost:8000/users/online-doctors");
+      const doctors = await response.json();
+      const list = document.getElementById("doctorsList");
+      list.innerHTML = "";
+      doctors.forEach(doctor => {
+        const li = document.createElement("li");
+        li.textContent = `Doctor Client_ID: ${doctor.client_id}`;
+        li.onclick = () => {
+          selectedDoctor = doctor.client_id;
+          alert(`Seleccionaste al Doctor con ID: ${selectedDoctor}`);
+        };
+        list.appendChild(li);
+      });
+    }
+
+    function sendMessage() {
+      const msg = document.getElementById("message").value;
+      if (!selectedDoctor) {
+        alert("Selecciona un doctor primero");
+        return;
+      }
+      ws.send(JSON.stringify({
+        to: selectedDoctor,
+        message: msg
+      }));
+    }
+  </script>
+</body>
+</html>

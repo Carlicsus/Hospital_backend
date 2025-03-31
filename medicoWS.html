@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Doctor</title>
+</head>
+<body>
+  <h2>Médico General - Chat</h2>
+  <input type="text" id="token" placeholder="Tu token JWT"><br><br>
+  <button onclick="connect()">Conectar</button>
+
+  <h3>Pacientes en Chat:</h3>
+  <ul id="patientsList"></ul>
+
+  <h3>Chat:</h3>
+  <ul id="chatBox"></ul>
+
+  <input type="text" id="responseMessage" placeholder="Escribe tu respuesta">
+  <button onclick="sendResponse()">Responder</button>
+
+  <script>
+    let ws;
+    let clientId = "";
+    let patients = {}; // 👈 Aquí guardamos {client_id: mensajes}
+    let selectedPatient = "";
+
+    function connect() {
+      const token = document.getElementById("token").value;
+      ws = new WebSocket(`ws://localhost:8000/ws?token=${token}`);
+      ws.onopen = () => console.log("Conectado al WebSocket");
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log(data);
+
+        if (data.client_id) {
+          clientId = data.client_id;
+        } else if (data.from) {
+          if (!patients[data.from]) {
+            patients[data.from] = [];
+          }
+          patients[data.from].push(data.message);
+          updatePatientsList();
+          updateChatBox();
+        }
+      };
+    }
+
+    function updatePatientsList() {
+      const list = document.getElementById("patientsList");
+      list.innerHTML = "";
+      Object.keys(patients).forEach(patientId => {
+        const li = document.createElement("li");
+        li.textContent = `Paciente: ${patientId}`;
+        li.onclick = () => {
+          selectedPatient = patientId;
+          updateChatBox();
+        };
+        list.appendChild(li);
+      });
+    }
+
+    function updateChatBox() {
+      const chatBox = document.getElementById("chatBox");
+      chatBox.innerHTML = "";
+      if (selectedPatient && patients[selectedPatient]) {
+        patients[selectedPatient].forEach(msg => {
+          const li = document.createElement("li");
+          li.textContent = `Paciente: ${msg}`;
+          chatBox.appendChild(li);
+        });
+      }
+    }
+
+    function sendResponse() {
+      const msg = document.getElementById("responseMessage").value;
+      if (!selectedPatient) {
+        alert("Selecciona un paciente primero");
+        return;
+      }
+      ws.send(JSON.stringify({
+        to: selectedPatient,
+        message: msg
+      }));
+
+      const chatBox = document.getElementById("chatBox");
+      const li = document.createElement("li");
+      li.textContent = `Tú: ${msg}`;
+      chatBox.appendChild(li);
+    }
+  </script>
+</body>
+</html>
