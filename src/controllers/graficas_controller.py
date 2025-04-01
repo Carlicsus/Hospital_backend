@@ -1,10 +1,11 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
 from src.db.db_mysql import databaseMysql
 from src.models.index_models import *
 from src.models.personas_model import Persona
 from src.models.personal_medico_model import PersonalMedico
+from src.dao.personas_dao import personasDAO
 
 
 class GraficasController:
@@ -78,6 +79,12 @@ class GraficasController:
             json_data["children"].append(area_data)
 
         return JSONResponse(content=json_data, status_code=200)
+    
+    def obtener_grupos_sanguineos(self, db: Session = Depends(databaseMysql.get_db)):
+        try:
+            return personasDAO.obtener_grupos_sanguineos(db)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="Error al obtener grupos sanguíneos")
 
 
 # Se obtiene la instancia única del controlador

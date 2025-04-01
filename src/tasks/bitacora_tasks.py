@@ -3,7 +3,7 @@ from src.models.index_models import Bitacora
 from sqlalchemy.orm import Session
 from src.db.db_mysql import databaseMysql
 from src.websockets.ws_manager import ws_manager
-from src.dao.grupos_sanguineos_dao import grupos_sanguineos_dao
+from src.dao.personas_dao import personasDAO
 
 # =========================
 # CONFIGURACIÓN
@@ -41,7 +41,7 @@ def revisar_bitacora():
             # 🔥 Si solo detectamos pocos inserts, mandamos WS por cada uno
             for entrada in personas_detectadas:
                 print(f"🟢 Enviando WS detallado por {entrada.Operacion}")
-                grupo_sanguineos = grupos_sanguineos_dao.obtener_todos(db)
+                grupo_sanguineos = personasDAO.obtener_grupos_sanguineos(db)
                 ws_manager.broadcast_sync({
                     "message": f"Cambio en personas: {entrada.Operacion}",
                     "grupo_sanguineo": grupo_sanguineos
@@ -49,7 +49,7 @@ def revisar_bitacora():
         else:
             # ✅ Consolidado
             print(f"🔔 Se detectó {len(personas_detectadas)} cambios en personas. Enviando solo un WS.")
-            grupo_sanguineos = grupos_sanguineos_dao.obtener_todos(db)
+            grupo_sanguineos = personasDAO.obtener_grupos_sanguineos(db)
             ws_manager.broadcast_sync({
                 "message": "Actualización de personas detectada",
                 "grupo_sanguineo": grupo_sanguineos

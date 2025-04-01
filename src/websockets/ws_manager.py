@@ -4,7 +4,7 @@ from uuid import uuid4
 from sqlalchemy.orm import Session
 from src.helpers.jwt_config import jwt_config
 from src.db.db_mysql import databaseMysql
-from src.dao.grupos_sanguineos_dao import grupos_sanguineos_dao
+from src.dao.personas_dao import personasDAO
 import jwt
 import asyncio
 

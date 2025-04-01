@@ -9,12 +9,11 @@ import asyncio
 from src.tasks.task_manager import iniciar_tareas_background
 from src.routes.usuarios_routes import usuario_routes
 from src.routes.notas_medicas_routes import notasMedicasRoutes
+from src.routes.personas_routes import persona_routes
 from contextlib import asynccontextmanager
 from src.routes.graficas_routes import graficas_routes
 from src.routes.citas_routes import citas_routes
 from src.routes.personal_medico_routes import personal_medico_routes
-from src.dao.grupos_sanguineos_dao import grupos_sanguineos_dao
-from src.dao.grupos_sanguineos_dao import grupos_sanguineos_dao
 from sqlalchemy.orm import Session
 from typing import List
 import jwt
@@ -80,6 +79,7 @@ class HospitalBackend:
         self.app.include_router(graficas_routes)
         self.app.include_router(citas_routes)
         self.app.include_router(personal_medico_routes)
+        self.app.include_router(persona_routes)
 
     def _include_websocket(self):
         """Incluye el WebSocket en la aplicación FastAPI."""
