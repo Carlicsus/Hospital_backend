@@ -38,7 +38,7 @@ class PersonalMedicoDAO:
     def get_all_doctors(self, db: Session):
         query = text("""
             SELECT 
-                pm.Persona_ID AS personalId,
+                pm.ID AS personalId,
                 CONCAT_WS(' ', p.Nombre, p.Primer_Apellido, p.Segundo_Apellido) AS nombreCompleto,
                 p.genero,
                 p.fecha_nacimiento,
@@ -85,7 +85,7 @@ class PersonalMedicoDAO:
     def get_all_nurses(self, db: Session):
         query = text("""
             SELECT 
-                pm.Persona_ID AS personalId,
+                pm.ID AS personalId,
                 CONCAT_WS(' ', p.Nombre, p.Primer_Apellido, p.Segundo_Apellido) AS nombreCompleto,
                 p.genero,
                 p.fecha_nacimiento,
