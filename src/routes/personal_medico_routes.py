@@ -11,7 +11,7 @@ class PersonalMedicoRoutes:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(PersonalMedicoRoutes, cls).__new__(cls)
-            cls._instance.router = APIRouter(prefix="/api/empleado", tags=["Personal Médico"])
+            cls._instance.router = APIRouter(prefix="/personalMedico", tags=["Personal Médico"])
             cls._instance.initialize_routes()
         return cls._instance
 

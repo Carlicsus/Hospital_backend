@@ -25,7 +25,7 @@ class NotasMedicasDAO:
 
     def obtener_todas(self):
         """Obtiene todas las notas médicas."""
-        return list(self.collection.find({}))
+        return list(self.collection.find({}).limit(100))
 
     def actualizar_nota(self, nota_id: str, nuevos_datos: dict):
         """Actualiza una nota médica por su ID e incluye updatedAt."""
